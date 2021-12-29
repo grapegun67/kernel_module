@@ -1,16 +1,10 @@
-KERNELDIR = /lib/modules/$(shell uname -r)/build
+obj-m += driver_test.o
 
-obj-m = hello_world.o
-
-TARGETS = hello_world.c
-
-KDIR := /lib/modules/$(shell uname -r)/build
+KDIR = /lib/modules/$(shell uname -r)/build
 PWD := $(shell pwd)
 
-default:
-        $(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+all:
+        make -C $(KDIR) M=$(PWD) modules
 
 clean:
-        rm -rf *.ko
-        rm -rf *.mod*
-        rm -rf *.o
+        make -C $(KDIR) M=$(PWD) clean
