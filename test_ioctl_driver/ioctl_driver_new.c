@@ -95,6 +95,7 @@ int __init cdev_ioctl_init(void)
         printk(KERN_ALERT "Major: [%d], minor: [%d]\n", MAJOR(dev), MINOR(dev));
 
         cdev_init(&cdev, &fops);
+        
         /* register cdev to kernel              */
         if (cdev_add(&cdev, dev, 1) < 0)
         {
@@ -102,12 +103,14 @@ int __init cdev_ioctl_init(void)
                 return (-1);
         }
 
+        /* 디바이스의 그룹, sysfs에 우리가 만드는 class가 등록    */
         if ((dev_class = class_create(THIS_MODULE, DEVICE_NAME)) == NULL)
         {
                 unregister_chrdev_region(dev, 1);
                 return (-1);
         }
 
+        /* 커널에 등록한 문자 디바이스와 연결된 디바이스 파일 생성     */
         if ((device_create(dev_class, NULL, dev, NULL, DEVICE_NAME)) == NULL)
         {
                 unregister_chrdev_region(dev, 1);
